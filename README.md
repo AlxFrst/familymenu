@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# FamilyMenu 🍽️
 
-First, run the development server:
+## Description
+FamilyMenu est une application simple destinée à faciliter l'organisation des repas lors des fêtes familiales. L'organisateur peut entrer tous les plats et sauces proposés, et les invités peuvent sélectionner ce qu'ils souhaitent manger. L'organisateur dispose également d'un tableau de bord pour gérer les commandes en temps réel.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Fonctionnalités
+### Pour l'organisateur
+1. **Ajouter des plats** : Nom du plat, image via URL.
+2. **Ajouter des sauces** : Nom de la sauce, image via URL.
+3. **Tableau de bord** : Voir toutes les commandes en temps réel, changer le statut des commandes (en attente, terminé).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Pour les invités
+1. **Étape 1 : Entrer le nom** : Identification simple par le nom.
+2. **Étape 2 : Sélectionner les plats** : Choisir les plats désirés.
+3. **Étape 3 : Sélectionner les sauces** : Choisir les sauces désirées.
+4. **Étape 4 : Résumé et validation** : Voir un résumé de la commande et valider.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Temps réel
+- Les commandes apparaissent en temps réel sur le tableau de bord de l'organisateur.
+- Les statuts des commandes se mettent à jour en temps réel pour tous les utilisateurs sur la page.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Prérequis
+- Node.js
+- TypeScript
+- Next.js
+- Prisma
+- SQLite (ou tout autre base de données compatible avec Prisma)
 
-## Learn More
+## Installation
+1. Clonez le dépôt :
+   \`\`\`bash
+   git clone https://github.com/votre-utilisateur/familymenu.git
+   \`\`\`
+2. Installez les dépendances :
+   \`\`\`bash
+   cd familymenu
+   npm install
+   \`\`\`
+3. Configurez Prisma :
+   \`\`\`bash
+   npx prisma init
+   \`\`\`
+4. Modifiez le fichier \`prisma/schema.prisma\` pour utiliser SQLite :
+   \`\`\`prisma
+   datasource db {
+     provider = "sqlite"
+     url      = "file:./dev.db"
+   }
 
-To learn more about Next.js, take a look at the following resources:
+   generator client {
+     provider = "prisma-client-js"
+   }
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   model Plat {
+     id        Int      @id @default(autoincrement())
+     nom       String
+     imageUrl  String
+     commandes Commande[]
+   }
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   model Sauce {
+     id        Int      @id @default(autoincrement())
+     nom       String
+     imageUrl  String
+     commandes Commande[]
+   }
 
-## Deploy on Vercel
+   model Commande {
+     id        Int      @id @default(autoincrement())
+     nomClient String
+     plats     Plat[]
+     sauces    Sauce[]
+     statut    String   @default("en attente")
+   }
+   \`\`\`
+5. Déployez la base de données :
+   \`\`\`bash
+   npx prisma migrate dev --name init
+   \`\`\`
+6. Lancez le serveur de développement :
+   \`\`\`bash
+   npm run dev
+   \`\`\`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Utilisation
+1. Accédez à \`http://localhost:3000\` pour voir l'application en action.
+2. L'organisateur peut accéder à son tableau de bord pour ajouter des plats et des sauces, et gérer les commandes.
+3. Les invités peuvent passer leur commande via une interface simple et intuitive.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contribuer
+Les contributions sont les bienvenues ! Veuillez soumettre une pull request ou ouvrir une issue pour discuter des changements que vous souhaitez apporter.
+
+## Licence
+[MIT](LICENSE)
+
+---
+
+## Technologies Utilisées
+- **Next.js** : Framework React pour le rendu côté serveur et la génération statique.
+- **TypeScript** : Superset de JavaScript qui ajoute le typage statique.
+- **Prisma** : ORM pour interagir avec la base de données.
+- **SQLite** : Base de données légère utilisée pour le développement.
+
+## Auteur
+Développé par [Votre Nom].
+
+---
+
+Pour toute question ou suggestion, n'hésitez pas à ouvrir une issue sur le dépôt GitHub. 
+
+Bon appétit ! 🍴✨
