@@ -1,0 +1,52 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Plat {
+  id        Int                 @id @default(autoincrement())
+  nom       String
+  imageUrl  String
+  commandes PlatsOnCommandes[]
+}
+
+model Sauce {
+  id        Int                 @id @default(autoincrement())
+  nom       String
+  imageUrl  String
+  commandes SaucesOnCommandes[]
+}
+
+model Commande {
+  id        Int                 @id @default(autoincrement())
+  nomClient String
+  plats     PlatsOnCommandes[]
+  sauces    SaucesOnCommandes[]
+  statut    String              @default("en attente")
+}
+
+model PlatsOnCommandes {
+  plat      Plat     @relation(fields: [platId], references: [id])
+  platId    Int
+  commande  Commande @relation(fields: [commandeId], references: [id])
+  commandeId Int
+  quantity  Int      // Quantité de ce plat dans la commande
+
+  @@id([platId, commandeId])
+}
+
+model SaucesOnCommandes {
+  sauce     Sauce    @relation(fields: [sauceId], references: [id])
+  sauceId   Int
+  commande  Commande @relation(fields: [commandeId], references: [id])
+  commandeId Int
+  quantity  Int      // Quantité de cette sauce dans la commande
+
+  @@id([sauceId, commandeId])
+}
